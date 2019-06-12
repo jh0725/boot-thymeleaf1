@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import iducs.springboot.board.Utils.HttpSessionUtils;
 import iducs.springboot.board.domain.User;
 import iducs.springboot.board.exception.ResourceNotFoundException;
 import iducs.springboot.board.repository.UserRepository;
@@ -36,10 +37,15 @@ public class UserController {
 	}	
 	@GetMapping("")
 	public String getAllUser(Model model, HttpSession session) {
+		if(HttpSessionUtils.isEmpty(session, "user")) {
+			return "redirect:/users/login-form";
+		}
+		/*
 		User user = (User) session.getAttribute("user");
 		if(user == null) {
 			return "redirect:/users/login-form"; // 로그인창으로
 		}
+		*/
 		model.addAttribute("users", userService.getUsers());
 		return "/users/list";
 	}	

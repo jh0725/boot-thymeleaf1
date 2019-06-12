@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import iducs.springboot.board.Utils.HttpSessionUtils;
 import iducs.springboot.board.domain.Question;
 import iducs.springboot.board.domain.User;
 import iducs.springboot.board.exception.ResourceNotFoundException;
@@ -38,9 +39,10 @@ public class QuerstionController {
 		return "/questions/list"; 
 	}	
 	
-	@PostMapping("")
+	@PostMapping("") //글이 등록될 때
 	// public String createUser(Question question, Model model, HttpSession session) {
 	public String createUser(String title, String contents, Model model, HttpSession session) {
+		
 		User sessionUser = (User) session.getAttribute("user");
 		Question newQuestion = new Question(title, sessionUser, contents);		
 		// Question newQuestion = new Question(question.getTitle(), writer, question.getContents());	
@@ -48,14 +50,20 @@ public class QuerstionController {
 		return "redirect:/questions"; // get 방식으로  리다이렉션 - Controller를 통해 접근
 	}
 	
-	@GetMapping("/{id}")
-	public String getQuestionById(@PathVariable(value = "id") Long id, Model model) {
+	@GetMapping("/{id}") //글을 하나 읽는 부분
+	public String getQuestionById(@PathVariable(value = "id") Long id, Model model, HttpSession session) {
+		if(HttpSessionUtils.isEmpty(session, "user"))
+			return "redirect:/users/login-form";
 		Question question = questionService.getQuestionById(id);
+		if(HttpSessionUtils.isSameUser((User) session.getAttribute("user"), question.getWriter())) {
+			model.addAttribute("same", question.getWriter());
+		}
 		model.addAttribute("question", question);
 		return "/questions/info";
 	}
 	@GetMapping("/{id}/form")
 	public String getUpdateForm(@PathVariable(value = "id") Long id, Model model) {
+		
 		Question question = questionService.getQuestionById(id);
 		model.addAttribute("question", question);
 		return "/questions/info";
