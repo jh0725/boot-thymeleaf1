@@ -62,23 +62,25 @@ public class QuerstionController {
 		return "/questions/info";
 	}
 	@GetMapping("/{id}/form")
-	public String getUpdateForm(@PathVariable(value = "id") Long id, Model model) {
-		
+	public String getUpdateForm(@PathVariable(value = "id") Long id, Model model, HttpSession session) {
+		User writer = (User) session.getAttribute("user");
 		Question question = questionService.getQuestionById(id);
+		model.addAttribute("writer", writer);
 		model.addAttribute("question", question);
-		return "/questions/info";
+		return "/questions/update";
 	}
 	@PutMapping("/{id}")
-	public String updateQuestionById(@PathVariable(value = "id") Long id, String title, String contents, Model model) {
-		Question question = questionService.getQuestionById(id);
-		questionService.updateQuestion(question);		
-		return "redirect:/questions/" + id;
+	public String updateQuestionById(@PathVariable(value = "id") Long id, String title, String contents, Model model, HttpSession session) {
+		User sessionUser = (User) session.getAttribute("user");
+		Question newQuestion = new Question(id, title, sessionUser, contents);
+		questionService.updateQuestion(newQuestion);		
+		return "redirect:/questions";
 	}
 	@DeleteMapping("/{id}")
 	public String deleteQuestionById(@PathVariable(value = "id") Long id, Model model) {
 		Question question = questionService.getQuestionById(id);
 		questionService.deleteQuestion(question);
 		model.addAttribute("userId", question.getWriter().getUserId());
-		return "/questions/withdrawal";
+		return "redirect:/questions";
 	}
 }

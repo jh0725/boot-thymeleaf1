@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import iducs.springboot.board.domain.Answer;
 import iducs.springboot.board.domain.Question;
 import iducs.springboot.board.domain.User;
+import iducs.springboot.board.entity.AnswerEntity;
 import iducs.springboot.board.entity.QuestionEntity;
 import iducs.springboot.board.entity.UserEntity;
 import iducs.springboot.board.repository.QuestionRepository;
@@ -21,9 +23,16 @@ public class QuestionServiceImpl implements QuestionService {
 	@Autowired QuestionRepository repository;
 
 	@Override
-	public Question getQuestionById(long id) {
+	public Question getQuestionById(long id) { 
 		QuestionEntity entity = repository.findById(id).get();
+		
 		Question question = entity.buildDomain();
+		// 질문 entity 객체로 부터 AnswerEntity ArrayList -> Answer ArrayList
+		List<Answer> answerList = new ArrayList<Answer>();
+		for(AnswerEntity answerEntity : entity.getAnswers())
+			answerList.add(answerEntity.buildDomain());
+		question.setAnswers(answerList);
+		
 		return question;
 	}
 

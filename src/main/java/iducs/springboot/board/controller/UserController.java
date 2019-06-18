@@ -66,15 +66,30 @@ public class UserController {
 		model.addAttribute("user", user);
 		session.setAttribute("user", user);
 		return "/users/info";
-	}	
+	}
 	@DeleteMapping("/{id}")
 	public String deleteUserById(@PathVariable(value = "id") Long id, @Valid User formUser, Model model) {
 		userService.deleteUser(formUser);
 		model.addAttribute("name", formUser.getName());
-		return "/users/withdrawal";
+		return "redirect:/users";
+	}
+	/*
+	 * 
+	@DeleteMapping("/{id}")		//info에서
+	public String deleteUserById(@PathVariable(value = "id") Long id, Model model) {
+		User formUser = userService.getUserById(id);
+		userService.deleteUser(formUser);
+		model.addAttribute("name", formUser.getName());
+		return "redirect:/users";
+	}
+	 * 
+	 * @DeleteMapping("/{id}")	//list에서
+	public String deleteUserById(@PathVariable(value = "id") Long id, @Valid User formUser, Model model) {
+		userService.deleteUser(formUser);
+		model.addAttribute("name", formUser.getName());
+		return "/users";
 	}
 	
-	/*
 	@PatchMapping("/users/{id}")
 	//@RequestBody 사용하는 경우 
 	public ResponseEntity<User> patchUserById(@PathVariable(value = "id") Long userId, @Valid  User userDetails, Model model)

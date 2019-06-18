@@ -35,6 +35,7 @@
 							<div class="country">UserID</div>
 							<div class="visit">Name</div>
 							<div class="percentage">Company</div>
+							<div class="percentage">delete</div>
 						</div>
 						<div th:each="user : ${users}">
 						<div class="table-row">
@@ -42,14 +43,17 @@
 							<div class="country"><span th:text="${user.userId}"></span></div>
 							<div class="visit"><span th:text="${user.name}"></span></div>
 							<div class="percentage"><span th:text="${user.name}"></span></div>
+							<div class="percentage">
+							<form th:action="@{'/users/{id}'(id=${user.id})}" th:method="delete" >
+				  				<button type="submit" id="deleteButton">delete </button>
+			  				</form></div>
+							
+							
 						</div>
 						</div>						
 					</div>
 				</div>
 			</div>
-			
-			
-			
 		</div>
 	</div>
 	<th:block th:include="fragments/footer"></th:block> 

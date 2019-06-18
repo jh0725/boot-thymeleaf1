@@ -32,6 +32,7 @@
 					</div>
 					<div class="col-lg-8 col-md-8">
 						<h3 class="mb-30">회원정보</h3>
+						
 						<!-- 
 						<form th:action="@{'/users'}" th:method="post">
 						 -->
@@ -53,6 +54,10 @@
 				              	회원정보수정</button>
 				            </div>
 						</form>
+							<form th:action="@{'/users/{id}'(id=${id})}" th:method="delete">
+								<input type="hidden" name="id" th:value="${id}" />
+								<button type="submit" class="button button-contactForm btn_4" id="deleteButton">delete</button>
+							</form>
 					</div>
 					<div class="col-lg-2 col-md-2 mt-sm-30">
 					</div>
